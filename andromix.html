@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>andromix — AI Intelligence for Retail & CPG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #060810;
+      --bg-2:      #0C1020;
+      --bg-3:      #131828;
+      --bg-card:   #0F1322;
+      --orange:    #FF4520;
+      --orange-lt: #FF6B47;
+      --teal:      #00DEB8;
+      --teal-dk:   #00A88A;
+      --yellow:    #FFD60A;
+      --blue:      #5B7BFF;
+      --blue-lt:   #7B96FF;
+      --red:       #FF2D55;
+      --green:     #30D158;
+      --text:      #F0F2F8;
+      --text-2:    #8896B0;
+      --text-3:    #4A5570;
+      --border:    rgba(255,255,255,0.06);
+      --border-2:  rgba(255,255,255,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.4;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+
+    /* ─── TYPOGRAPHY ─── */
+    .display { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; text-transform: uppercase; line-height: 0.92; letter-spacing: -0.01em; }
+    .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+    .data { font-family: 'IBM Plex Mono', monospace; }
+
+    /* ─── NAVIGATION ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 72px;
+      transition: background 0.3s, border-color 0.3s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(6,8,16,0.88);
+      backdrop-filter: blur(20px);
+      border-color: var(--border-2);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 34px; height: 34px;
+      display: flex; flex-direction: column; justify-content: center; gap: 4px;
+    }
+    .logo-bar {
+      height: 3px; background: var(--orange); border-radius: 2px;
+      transform-origin: left;
+    }
+    .logo-bar:nth-child(1) { width: 100%; }
+    .logo-bar:nth-child(2) { width: 65%; background: var(--teal); }
+    .logo-bar:nth-child(3) { width: 40%; background: var(--yellow); }
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 22px;
+      letter-spacing: 0.02em; color: var(--text);
+    }
+    .logo-text span { color: var(--orange); }
+    .nav-links {
+      display: flex; align-items: center; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--text-2);
+      font-size: 14px; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 24px; border-radius: 6px;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s; border: none; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-ghost {
+      background: transparent; color: var(--text-2); border: 1px solid var(--border-2);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text-2); }
+    .btn-primary {
+      background: var(--orange); color: #fff;
+      box-shadow: 0 0 0 0 rgba(255,69,32,0.4);
+    }
+    .btn-primary:hover {
+      background: var(--orange-lt);
+      box-shadow: 0 8px 24px rgba(255,69,32,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent; color: var(--teal);
+      border: 1px solid var(--teal);
+    }
+    .btn-outline:hover { background: rgba(0,222,184,0.08); }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: grid; place-items: center;
+      padding: 120px 48px 80px;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,69,32,0.08) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,222,184,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse 40% 40% at 10% 60%, rgba(91,123,255,0.05) 0%, transparent 60%);
+    }
+    .shelf-grid-bg {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 55%; display: flex; flex-direction: column;
+      gap: 3px; padding: 0 0 0 0; overflow: hidden;
+      opacity: 0.35; pointer-events: none;
+    }
+    .shelf-row {
+      display: flex; gap: 3px; flex: 1;
+      align-items: stretch;
+    }
+    .shelf-slot {
+      flex: 1; min-width: 0;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.07);
+      transition: background 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+    .shelf-slot.filled { background: rgba(255,255,255,0.11); }
+    .shelf-slot.oos {
+      background: rgba(255,69,32,0.45);
+      animation: oos-pulse 2.2s ease-in-out infinite;
+    }
+    .shelf-slot.teal-slot { background: rgba(0,222,184,0.2); }
+    .shelf-slot.yellow-slot { background: rgba(255,214,10,0.2); }
+    @keyframes oos-pulse {
+      0%, 100% { background: rgba(255,69,32,0.45); }
+      50% { background: rgba(255,69,32,0.75); box-shadow: 0 0 12px rgba(255,69,32,0.6); }
+    }
+    .scan-line {
+      position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,222,184,0.15), rgba(0,222,184,0.08), transparent);
+      animation: scan 4s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes scan {
+      0% { left: -60%; }
+      100% { left: 100%; }
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 900px; text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,69,32,0.12); border: 1px solid rgba(255,69,32,0.3);
+      margin-bottom: 28px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--orange); animation: blink 1.6s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero-badge span { font-size: 12px; color: var(--orange); font-weight: 600; letter-spacing: 0.06em; }
+    .hero-headline {
+      font-size: clamp(52px, 9vw, 110px);
+      margin-bottom: 24px;
+    }
+    .hero-headline .line-1 { display: block; color: var(--text); }
+    .hero-headline .line-2 {
+      display: block;
+      background: linear-gradient(90deg, var(--orange), var(--yellow) 40%, var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--text-2); max-width: 540px; margin: 0 auto 40px;
+      font-weight: 400; line-height: 1.7;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* Floating metric cards */
+    .float-cards {
+      position: absolute; z-index: 3;
+      pointer-events: none; inset: 0;
+    }
+    .float-card {
+      position: absolute;
+      background: var(--bg-card);
+      border: 1px solid var(--border-2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      backdrop-filter: blur(12px);
+      animation: float-card-anim 6s ease-in-out infinite;
+    }
+    .float-card:nth-child(1) { top: 22%; left: 4%; animation-delay: 0s; }
+    .float-card:nth-child(2) { top: 28%; right: 4%; animation-delay: 2s; }
+    .float-card:nth-child(3) { bottom: 24%; left: 6%; animation-delay: 4s; }
+    @keyframes float-card-anim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .float-card .fc-label { font-size: 10px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .float-card .fc-value { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; }
+    .float-card .fc-sub { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .fc-green .fc-value { color: var(--green); }
+    .fc-orange .fc-value { color: var(--orange); }
+    .fc-teal .fc-value { color: var(--teal); }
+    .fc-indicator {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; margin-top: 6px; color: var(--green);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-strip {
+      background: var(--bg-3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0; overflow: hidden;
+    }
+    .marquee-inner {
+      display: flex; gap: 0;
+      animation: marquee 22s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-inner:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; color: var(--text-3);
+      letter-spacing: 0.1em;
+    }
+    .marquee-item .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--orange); }
+
+    /* ─── SECTIONS COMMON ─── */
+    section { padding: 100px 48px; position: relative; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: ''; width: 20px; height: 2px; background: var(--orange);
+    }
+    .section-title { font-size: clamp(36px, 5vw, 58px); max-width: 720px; }
+    .section-sub { font-size: 17px; color: var(--text-2); max-width: 580px; margin-top: 16px; line-height: 1.75; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* ─── REVEAL ANIMATION ─── */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ─── PROBLEM STATS ─── */
+    #problem {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 48px;
+    }
+    .problem-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .problem-card {
+      background: var(--bg-card);
+      padding: 44px 40px;
+      position: relative; overflow: hidden;
+    }
+    .problem-card:first-child { border-radius: 12px 0 0 12px; }
+    .problem-card:last-child { border-radius: 0 12px 12px 0; }
+    .problem-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .problem-card:nth-child(1)::before { background: var(--orange); }
+    .problem-card:nth-child(2)::before { background: var(--yellow); }
+    .problem-card:nth-child(3)::before { background: var(--teal); }
+    .price-tag-shape {
+      display: inline-block; position: relative;
+      background: var(--bg-3);
+      border: 1px solid var(--border-2);
+      border-radius: 6px;
+      padding: 8px 16px 8px 22px;
+      margin-bottom: 20px;
+    }
+    .price-tag-shape::before {
+      content: ''; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+      width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--text-3);
+    }
+    .pc-stat {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 62px; line-height: 1;
+      margin-bottom: 12px;
+    }
+    .pc-stat.orange { color: var(--orange); }
+    .pc-stat.yellow { color: var(--yellow); }
+    .pc-stat.teal { color: var(--teal); }
+    .pc-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+    .pc-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+    /* ─── PLATFORM SECTION ─── */
+    #platform { background: var(--bg); }
+    .platform-header { max-width: 660px; margin-bottom: 64px; }
+    .modules-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 44px 36px;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+    .module-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+    }
+    .module-card:nth-child(1):hover { border-color: var(--teal); box-shadow: 0 24px 48px rgba(0,222,184,0.1); }
+    .module-card:nth-child(2):hover { border-color: var(--orange); box-shadow: 0 24px 48px rgba(255,69,32,0.12); }
+    .module-card:nth-child(3):hover { border-color: var(--blue); box-shadow: 0 24px 48px rgba(91,123,255,0.12); }
+    .module-glow {
+      position: absolute; top: -40px; right: -40px;
+      width: 160px; height: 160px; border-radius: 50%;
+      filter: blur(60px); opacity: 0.15; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .module-card:hover .module-glow { opacity: 0.25; }
+    .mc-teal { background: var(--teal); }
+    .mc-orange { background: var(--orange); }
+    .mc-blue { background: var(--blue); }
+    .module-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px; font-size: 24px;
+    }
+    .mi-teal { background: rgba(0,222,184,0.12); border: 1px solid rgba(0,222,184,0.25); }
+    .mi-orange { background: rgba(255,69,32,0.12); border: 1px solid rgba(255,69,32,0.25); }
+    .mi-blue { background: rgba(91,123,255,0.12); border: 1px solid rgba(91,123,255,0.25); }
+    .module-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 28px; letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+    .mc-name-teal { color: var(--teal); }
+    .mc-name-orange { color: var(--orange); }
+    .mc-name-blue { color: var(--blue-lt); }
+    .module-tagline { font-size: 13px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.08em; margin-bottom: 20px; }
+    .module-desc { font-size: 15px; color: var(--text-2); line-height: 1.65; margin-bottom: 28px; }
+    .module-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .module-features li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text-2);
+    }
+    .mf-dot {
+      width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0;
+    }
+    .mf-teal { background: var(--teal); }
+    .mf-orange { background: var(--orange); }
+    .mf-blue { background: var(--blue-lt); }
+    .module-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 32px; font-size: 13px; font-weight: 600;
+      text-decoration: none; transition: gap 0.2s;
+    }
+    .module-cta:hover { gap: 10px; }
+    .cta-teal { color: var(--teal); }
+    .cta-orange { color: var(--orange); }
+    .cta-blue { color: var(--blue-lt); }
+
+    /* ─── FEATURE DEEP DIVE ─── */
+    #features { background: var(--bg-2); border-top: 1px solid var(--border); }
+    .feature-tabs {
+      display: flex; gap: 4px;
+      background: var(--bg-card); border-radius: 12px;
+      padding: 6px; margin-bottom: 56px;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+    .tab-btn {
+      padding: 12px 28px; border-radius: 8px;
+      background: transparent; border: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 16px; letter-spacing: 0.05em;
+      color: var(--text-3); cursor: pointer;
+      transition: all 0.25s;
+    }
+    .tab-btn.active.t-teal { background: rgba(0,222,184,0.12); color: var(--teal); border: 1px solid rgba(0,222,184,0.2); }
+    .tab-btn.active.t-orange { background: rgba(255,69,32,0.12); color: var(--orange); border: 1px solid rgba(255,69,32,0.2); }
+    .tab-btn.active.t-blue { background: rgba(91,123,255,0.12); color: var(--blue-lt); border: 1px solid rgba(91,123,255,0.2); }
+    .tab-btn:hover:not(.active) { color: var(--text-2); background: rgba(255,255,255,0.04); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .tp-feature-list { display: flex; flex-direction: column; gap: 24px; }
+    .tp-feature {
+      padding: 20px 24px;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer; transition: all 0.25s;
+    }
+    .tp-feature:hover, .tp-feature.active { border-color: var(--border-2); background: var(--bg-3); }
+    .tp-f-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0; transition: margin 0.25s; }
+    .tp-feature.active .tp-f-header { margin-bottom: 10px; }
+    .tp-f-icon { font-size: 18px; }
+    .tp-f-title { font-weight: 600; font-size: 15px; }
+    .tp-f-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; display: none; }
+    .tp-feature.active .tp-f-desc { display: block; }
+    /* Visual panels */
+    .tp-visual {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border-2);
+      background: var(--bg-card);
+      position: relative; min-height: 380px;
+    }
+    .tv-header {
+      padding: 14px 20px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tv-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .tv-title { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--text-3); margin-left: 6px; }
+    .tv-body { padding: 20px; }
+
+    /* ShelfIQ visual */
+    .shelf-visual-grid {
+      display: grid; grid-template-rows: repeat(5, 40px); gap: 6px;
+      position: relative;
+    }
+    .svr { display: flex; gap: 4px; }
+    .svs {
+      flex: 1; height: 40px; border-radius: 3px;
+      background: rgba(255,255,255,0.08);
+      transition: background 0.3s;
+    }
+    .svs.f { background: rgba(255,255,255,0.15); }
+    .svs.f2 { background: rgba(0,222,184,0.2); }
+    .svs.f3 { background: rgba(255,214,10,0.18); }
+    .svs.oos-v {
+      background: rgba(255,69,32,0.5);
+      animation: v-oos 2s ease-in-out infinite;
+      position: relative;
+    }
+    .svs.oos-v::after {
+      content: '!'; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 11px; font-weight: 700; color: var(--orange);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    @keyframes v-oos { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .shelf-scan-line {
+      position: absolute; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, transparent, var(--teal), transparent);
+      animation: shelf-scan 3s linear infinite; left: 0;
+    }
+    @keyframes shelf-scan { 0%{left:0} 100%{left:100%} }
+    .shelf-label-row { margin-top: 4px; display: flex; gap: 4px; }
+    .shelf-label-item {
+      flex: 1; height: 8px; border-radius: 1px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 2px solid rgba(255,214,10,0.3);
+    }
+    .oos-badge {
+      position: absolute; top: -8px; right: 12px;
+      background: var(--red); color: white;
+      font-size: 10px; font-weight: 700;
+      font-family: 'IBM Plex Mono', monospace;
+      padding: 2px 8px; border-radius: 100px;
+      letter-spacing: 0.06em;
+    }
+
+    /* MarkdownOS visual */
+    .markdown-visual {
+      display: flex; flex-direction: column; gap: 14px; padding: 4px;
+    }
+    .mv-product {
+      background: var(--bg-3); border-radius: 8px;
+      padding: 14px 16px; border: 1px solid var(--border);
+      display: grid; grid-template-columns: 1fr auto auto;
+      align-items: center; gap: 16px;
+    }
+    .mvp-name { font-size: 13px; font-weight: 600; }
+    .mvp-sub { font-size: 11px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; }
+    .mvp-old-price {
+      font-size: 13px; color: var(--text-3);
+      text-decoration: line-through;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .mvp-new-price { text-align: right; }
+    .mvp-new-price .price { font-size: 16px; font-weight: 700; color: var(--green); font-family: 'IBM Plex Mono', monospace; }
+    .mvp-badge {
+      font-size: 11px; font-weight: 700; color: #fff;
+      background: var(--red); padding: 2px 6px; border-radius: 4px;
+      text-align: center; margin-top: 2px;
+    }
+    .mv-chart { margin-top: 8px; }
+    .mv-chart-label { font-size: 11px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; margin-bottom: 8px; }
+    .mv-bars { display: flex; gap: 4px; align-items: flex-end; height: 60px; }
+    .mv-bar {
+      flex: 1; border-radius: 3px 3px 0 0;
+      background: rgba(255,255,255,0.1);
+      transition: height 0.6s ease;
+    }
+    .mv-bar.pred { background: var(--teal); opacity: 0.85; }
+    .mv-bar.act { background: var(--orange); }
+    .mv-bar-legend { display: flex; gap: 16px; margin-top: 6px; }
+    .mvbl-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); }
+    .mvbl-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* SupplierSync visual */
+    .ss-visual { padding: 10px; }
+    .ss-nodes {
+      position: relative; height: 220px; margin-bottom: 16px;
+    }
+    .ss-node {
+      position: absolute; border-radius: 8px;
+      padding: 10px 16px; font-size: 12px; font-weight: 600;
+      border: 1px solid; white-space: nowrap;
+    }
+    .ss-retailer {
+      background: rgba(255,69,32,0.1); border-color: rgba(255,69,32,0.4); color: var(--orange);
+      left: 50%; top: 50%; transform: translate(-50%,-50%);
+      z-index: 2;
+    }
+    .ss-supplier {
+      background: rgba(0,222,184,0.08); border-color: rgba(0,222,184,0.25); color: var(--teal);
+      font-size: 11px;
+    }
+    .ss-s1 { top: 8%; left: 10%; }
+    .ss-s2 { top: 8%; right: 10%; }
+    .ss-s3 { bottom: 8%; left: 10%; }
+    .ss-s4 { bottom: 8%; right: 10%; }
+    .ss-s5 { top: 42%; left: 2%; }
+    .ss-s6 { top: 42%; right: 2%; }
+    .ss-data-row {
+      background: var(--bg-3); border-radius: 6px;
+      padding: 10px 14px; border: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px;
+    }
+    .ss-dr-label { font-size: 12px; color: var(--text-2); }
+    .ss-dr-value { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; color: var(--teal); }
+    .ss-dr-delta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--green); }
+
+    /* ─── HOW IT WORKS ─── */
+    #how { background: var(--bg); }
+    .hiw-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 3px; position: relative;
+    }
+    .hiw-step {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 44px 36px;
+      position: relative; overflow: hidden;
+    }
+    .hiw-step:nth-child(1) { border-radius: 16px 0 0 16px; }
+    .hiw-step:nth-child(3) { border-radius: 0 16px 16px 0; }
+    .hiw-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 100px; font-weight: 900;
+      position: absolute; right: 20px; top: -10px;
+      color: rgba(255,255,255,0.03); line-height: 1;
+      pointer-events: none;
+    }
+    .hiw-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 20px;
+      background: var(--bg-3); border: 1px solid var(--border-2);
+    }
+    .hiw-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .hiw-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+    .hiw-connector {
+      position: absolute; top: 50%; right: -20px;
+      width: 40px; height: 2px;
+      background: linear-gradient(90deg, var(--border-2), transparent);
+      z-index: 5;
+    }
+    .hiw-integrations { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .int-tag {
+      font-size: 10px; font-family: 'IBM Plex Mono', monospace;
+      color: var(--text-3); background: var(--bg-3);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 3px 8px; letter-spacing: 0.05em;
+    }
+
+    /* ─── METRICS ─── */
+    #metrics {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      border-top: 1px solid var(--border);
+    }
+    .metrics-intro { text-align: center; margin-bottom: 72px; }
+    .metrics-intro .section-title { margin: 0 auto; }
+    .metrics-intro .section-sub { margin: 16px auto 0; text-align: center; }
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+    .metric-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 44px 32px; border-radius: 12px;
+      position: relative; text-align: center;
+    }
+    .metric-card:first-child { border-radius: 12px 0 0 12px; }
+    .metric-card:last-child { border-radius: 0 12px 12px 0; }
+    .metric-card::before {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 3px;
+    }
+    .metric-card:nth-child(1)::before { background: var(--teal); }
+    .metric-card:nth-child(2)::before { background: var(--orange); }
+    .metric-card:nth-child(3)::before { background: var(--yellow); }
+    .metric-card:nth-child(4)::before { background: var(--blue-lt); }
+    .metric-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 68px; line-height: 1;
+      margin-bottom: 8px;
+    }
+    .metric-val.teal { color: var(--teal); }
+    .metric-val.orange { color: var(--orange); }
+    .metric-val.yellow { color: var(--yellow); }
+    .metric-val.blue { color: var(--blue-lt); }
+    .metric-label { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .metric-desc { font-size: 13px; color: var(--text-3); line-height: 1.5; }
+
+    /* ─── INTEGRATIONS ─── */
+    #integrations { background: var(--bg-2); border-top: 1px solid var(--border); }
+    .int-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 56px; }
+    .int-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+    }
+    .int-item {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      transition: all 0.2s;
+    }
+    .int-item:hover {
+      border-color: var(--border-2);
+      background: var(--bg-3);
+      transform: translateY(-2px);
+    }
+    .int-logo {
+      width: 40px; height: 40px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.02em;
+    }
+    .int-name { font-size: 12px; color: var(--text-3); text-align: center; font-weight: 500; }
+    .int-category { font-size: 10px; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; text-align: center; opacity: 0.6; }
+
+    /* ─── PRICING ─── */
+    #pricing { background: var(--bg); }
+    .pricing-header { text-align: center; margin-bottom: 64px; }
+    .pricing-header .section-title { margin: 0 auto; }
+    .pricing-header .section-sub { margin: 16px auto 0; text-align: center; }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; max-width: 1000px; margin: 0 auto;
+    }
+    .price-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 44px 36px;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .price-card:hover { transform: translateY(-8px); }
+    .price-card.featured {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 1px var(--orange), 0 32px 64px rgba(255,69,32,0.15);
+    }
+    .price-card.featured:hover { box-shadow: 0 0 0 1px var(--orange), 0 40px 80px rgba(255,69,32,0.2); }
+    .featured-badge {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--orange); color: white;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 4px 12px; border-radius: 100px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .pc-tier { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.15em; color: var(--text-3); margin-bottom: 16px; }
+    .pc-name { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; margin-bottom: 8px; }
+    .pc-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 54px; font-weight: 900; line-height: 1;
+      margin-bottom: 6px;
+    }
+    .pc-price sub { font-size: 20px; vertical-align: middle; color: var(--text-2); }
+    .pc-price .sym { font-size: 28px; }
+    .pc-period { font-size: 13px; color: var(--text-3); margin-bottom: 8px; }
+    .pc-stores { font-size: 13px; color: var(--text-2); margin-bottom: 32px; font-family: 'IBM Plex Mono', monospace; }
+    .pc-divider { height: 1px; background: var(--border); margin-bottom: 28px; }
+    .pc-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+    .pc-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); }
+    .check { color: var(--green); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .pc-cta { display: block; text-align: center; padding: 14px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; transition: all 0.2s; }
+    .pc-cta-ghost { border: 1px solid var(--border-2); color: var(--text-2); }
+    .pc-cta-ghost:hover { border-color: var(--text-2); color: var(--text); }
+    .pc-cta-primary { background: var(--orange); color: white; box-shadow: 0 8px 24px rgba(255,69,32,0.3); }
+    .pc-cta-primary:hover { background: var(--orange-lt); transform: translateY(-1px); }
+
+    /* ─── FOUNDER ─── */
+    #founder {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+    }
+    .founder-grid { display: grid; grid-template-columns: auto 1fr; gap: 64px; align-items: center; }
+    .founder-avatar-wrap { position: relative; }
+    .founder-avatar {
+      width: 200px; height: 200px; border-radius: 20px;
+      background: linear-gradient(135deg, var(--bg-3), var(--bg-card));
+      border: 1px solid var(--border-2);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 64px; font-weight: 900;
+      color: var(--orange); letter-spacing: -0.02em;
+      position: relative; overflow: hidden;
+    }
+    .founder-avatar::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 30%, rgba(255,69,32,0.15), transparent 60%);
+    }
+    .founder-tag {
+      position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--orange); color: white;
+      font-size: 11px; font-weight: 700; font-family: 'IBM Plex Mono', monospace;
+      padding: 4px 14px; border-radius: 100px; white-space: nowrap;
+      letter-spacing: 0.06em;
+    }
+    .founder-info { padding-top: 8px; }
+    .founder-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 48px; font-weight: 900;
+      margin-bottom: 4px; line-height: 1;
+    }
+    .founder-role { font-size: 14px; color: var(--teal); font-weight: 600; margin-bottom: 24px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.08em; }
+    .founder-bio { font-size: 16px; color: var(--text-2); line-height: 1.75; max-width: 580px; margin-bottom: 28px; }
+    .founder-stats { display: flex; gap: 40px; }
+    .f-stat-val { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 32px; color: var(--text); margin-bottom: 2px; }
+    .f-stat-label { font-size: 12px; color: var(--text-3); }
+
+    /* ─── CTA SECTION ─── */
+    #cta {
+      background: var(--bg);
+      text-align: center; padding: 120px 48px;
+    }
+    .cta-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,69,32,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 2; }
+    .cta-eyebrow { margin-bottom: 20px; }
+    .cta-title { font-size: clamp(40px, 7vw, 80px); max-width: 700px; margin: 0 auto 20px; }
+    .cta-sub { font-size: 18px; color: var(--text-2); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .cta-note { font-size: 12px; color: var(--text-3); margin-top: 16px; font-family: 'IBM Plex Mono', monospace; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      padding: 60px 48px 40px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.6fr repeat(3, 1fr);
+      gap: 48px; margin-bottom: 56px;
+    }
+    .footer-brand { }
+    .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .footer-tagline { font-size: 14px; color: var(--text-2); line-height: 1.65; max-width: 240px; margin-bottom: 24px; }
+    .footer-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-family: 'IBM Plex Mono', monospace;
+      color: var(--green); letter-spacing: 0.08em;
+    }
+    .footer-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+    .footer-col-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 20px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { text-decoration: none; color: var(--text-2); font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-bottom {
+      padding-top: 32px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-copy { font-size: 13px; color: var(--text-3); }
+    .footer-bottom-links { display: flex; gap: 28px; }
+    .footer-bottom-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom-links a:hover { color: var(--text-2); }
+
+    /* ─── BARCODE DECORATION ─── */
+    .barcode-deco {
+      display: flex; gap: 2px; align-items: stretch;
+      height: 40px; opacity: 0.08;
+    }
+    .bc-bar {
+      border-radius: 1px;
+      background: var(--text);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      section { padding: 80px 24px; }
+      #hero { padding: 120px 24px 80px; }
+      .problem-grid, .modules-grid, .hiw-grid, .metrics-grid, .int-grid { grid-template-columns: 1fr 1fr; }
+      .int-grid { grid-template-columns: repeat(4, 1fr); }
+      .tab-panel.active { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .founder-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .float-card:nth-child(3) { display: none; }
+      .float-card { display: none; }
+    }
+    @media (max-width: 640px) {
+      .problem-grid, .modules-grid, .hiw-grid, .metrics-grid, .int-grid { grid-template-columns: 1fr; }
+      .hero-headline { font-size: 48px; }
+      .feature-tabs { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVIGATION ─── -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    <div class="logo-mark">
+      <div class="logo-bar"></div>
+      <div class="logo-bar"></div>
+      <div class="logo-bar"></div>
+    </div>
+    <span class="logo-text">andro<span>mix</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#platform">Platform</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#founder">Company</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#features" class="btn btn-ghost">See Demo</a>
+    <a href="#cta" class="btn btn-primary">Get Free Shelf Audit →</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Animated shelf grid background -->
+  <div class="shelf-grid-bg" id="shelfGridBg"></div>
+  <div class="scan-line"></div>
+
+  <!-- Floating metric cards -->
+  <div class="float-cards">
+    <div class="float-card fc-teal reveal">
+      <div class="fc-label">OOS DETECTED</div>
+      <div class="fc-value">127</div>
+      <div class="fc-sub">across 84 stores</div>
+      <div class="fc-indicator">▲ Live</div>
+    </div>
+    <div class="float-card fc-green reveal reveal-delay-2">
+      <div class="fc-label">MARGIN RECOVERED</div>
+      <div class="fc-value">$847K</div>
+      <div class="fc-sub">this quarter</div>
+      <div class="fc-indicator">▲ +34% vs last Q</div>
+    </div>
+    <div class="float-card fc-orange reveal reveal-delay-4">
+      <div class="fc-label">FORECAST ACCURACY</div>
+      <div class="fc-value">94.2%</div>
+      <div class="fc-sub">MAPE improvement</div>
+      <div class="fc-indicator">▲ +12pts</div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge reveal">
+      <div class="badge-dot"></div>
+      <span>AI-NATIVE RETAIL & CPG INTELLIGENCE</span>
+    </div>
+    <h1 class="display hero-headline reveal reveal-delay-1">
+      <span class="line-1">The AI Brain Behind</span>
+      <span class="line-2">Every Retail Decision</span>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      <strong>Shelf intelligence.</strong> Markdown optimization. Supplier collaboration.
+      One platform that transforms your shelf data into prescriptive, real-time action.
+    </p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <a href="#cta" class="btn btn-primary" style="font-size:16px; padding:14px 32px;">Get Your Free Shelf Audit →</a>
+      <a href="#features" class="btn btn-ghost" style="font-size:16px; padding:14px 28px;">Watch Platform Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MARQUEE ─── -->
+<div class="marquee-strip">
+  <div class="marquee-inner" id="marquee">
+    <span class="marquee-item"><span class="dot"></span>SHELF INTELLIGENCE</span>
+    <span class="marquee-item"><span class="dot"></span>MARKDOWN OPTIMIZATION</span>
+    <span class="marquee-item"><span class="dot"></span>SUPPLIER COLLABORATION</span>
+    <span class="marquee-item"><span class="dot"></span>OOS DETECTION</span>
+    <span class="marquee-item"><span class="dot"></span>PLANOGRAM COMPLIANCE</span>
+    <span class="marquee-item"><span class="dot"></span>TRADE PROMO ROI</span>
+    <span class="marquee-item"><span class="dot"></span>DEMAND FORECASTING</span>
+    <span class="marquee-item"><span class="dot"></span>JOINT BUSINESS PLANNING</span>
+    <span class="marquee-item"><span class="dot"></span>PRICE ELASTICITY MODELING</span>
+    <span class="marquee-item"><span class="dot"></span>SELL-THROUGH OPTIMIZATION</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="marquee-item"><span class="dot"></span>SHELF INTELLIGENCE</span>
+    <span class="marquee-item"><span class="dot"></span>MARKDOWN OPTIMIZATION</span>
+    <span class="marquee-item"><span class="dot"></span>SUPPLIER COLLABORATION</span>
+    <span class="marquee-item"><span class="dot"></span>OOS DETECTION</span>
+    <span class="marquee-item"><span class="dot"></span>PLANOGRAM COMPLIANCE</span>
+    <span class="marquee-item"><span class="dot"></span>TRADE PROMO ROI</span>
+    <span class="marquee-item"><span class="dot"></span>DEMAND FORECASTING</span>
+    <span class="marquee-item"><span class="dot"></span>JOINT BUSINESS PLANNING</span>
+    <span class="marquee-item"><span class="dot"></span>PRICE ELASTICITY MODELING</span>
+    <span class="marquee-item"><span class="dot"></span>SELL-THROUGH OPTIMIZATION</span>
+  </div>
+</div>
+
+<!-- ─── PROBLEM SECTION ─── -->
+<section id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="price-tag-shape">
+          <span class="label">inventory distortion</span>
+        </div>
+        <div class="pc-stat orange counter" data-target="1" data-suffix="T+">$0</div>
+        <div class="pc-title">Lost Every Year to Shelf Failures</div>
+        <div class="pc-desc">Out-of-stocks and overstocks silently destroy margins while category managers work in spreadsheets.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="price-tag-shape">
+          <span class="label">trade promotion</span>
+        </div>
+        <div class="pc-stat yellow counter" data-target="70" data-suffix="%">0%</div>
+        <div class="pc-title">Of Promotions Are Unprofitable</div>
+        <div class="pc-desc">$200B in annual trade spend with no real pre-promotion modeling. Both sides guess. Both sides lose.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-4">
+        <div class="price-tag-shape">
+          <span class="label">OOS detection delay</span>
+        </div>
+        <div class="pc-stat teal counter" data-target="4" data-suffix="–8 HRS">0</div>
+        <div class="pc-title">Average Time to Detect Empty Shelves</div>
+        <div class="pc-desc">Every hour a shelf is empty is pure lost revenue. Retailers find out when customers complain.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PLATFORM SECTION ─── -->
+<section id="platform">
+  <div class="container">
+    <div class="platform-header">
+      <div class="section-label reveal">
+        <span class="label">The andromix Platform</span>
+      </div>
+      <h2 class="display section-title reveal reveal-delay-1">Three Modules.<br>One Data Model.<br>Zero Guesswork.</h2>
+      <p class="section-sub reveal reveal-delay-2">Every module shares the same SKU × Store × Time data layer — meaning your shelf data informs your markdown decisions, and your markdown data makes your supplier collaboration sharper.</p>
+    </div>
+    <div class="modules-grid">
+
+      <!-- ShelfIQ -->
+      <div class="module-card reveal">
+        <div class="module-glow mc-teal"></div>
+        <div class="module-icon mi-teal">📡</div>
+        <div class="module-name mc-name-teal">ShelfIQ</div>
+        <div class="module-tagline">// Shelf Intelligence Layer</div>
+        <p class="module-desc">Real-time out-of-stock detection, planogram compliance scoring, and share-of-shelf measurement — without a single piece of hardware.</p>
+        <ul class="module-features">
+          <li><span class="mf-dot mf-teal"></span><span>POS-velocity OOS detection at sub-hour latency</span></li>
+          <li><span class="mf-dot mf-teal"></span><span>Planogram compliance scoring by store & category</span></li>
+          <li><span class="mf-dot mf-teal"></span><span>Mobile audit app with AI-powered shelf photo analysis</span></li>
+          <li><span class="mf-dot mf-teal"></span><span>Assortment gap identification with revenue estimates</span></li>
+          <li><span class="mf-dot mf-teal"></span><span>Competitor share-of-shelf benchmarking</span></li>
+        </ul>
+        <a href="#features" class="module-cta cta-teal">Explore ShelfIQ <span>→</span></a>
+      </div>
+
+      <!-- MarkdownOS -->
+      <div class="module-card reveal reveal-delay-2">
+        <div class="module-glow mc-orange"></div>
+        <div class="module-icon mi-orange">🏷️</div>
+        <div class="module-name mc-name-orange">MarkdownOS</div>
+        <div class="module-tagline">// Markdown Intelligence Engine</div>
+        <p class="module-desc">Prescriptive markdown decisions — when, how much, and which stores — with full margin impact modeling before you pull the trigger.</p>
+        <ul class="module-features">
+          <li><span class="mf-dot mf-orange"></span><span>SKU-store-day demand forecasting with 94%+ accuracy</span></li>
+          <li><span class="mf-dot mf-orange"></span><span>Markdown trigger engine with sell-through simulation</span></li>
+          <li><span class="mf-dot mf-orange"></span><span>Price elasticity modeling by category & store cluster</span></li>
+          <li><span class="mf-dot mf-orange"></span><span>Competitor pricing integration (real-time)</span></li>
+          <li><span class="mf-dot mf-orange"></span><span>Post-markdown attribution & model learning loop</span></li>
+        </ul>
+        <a href="#features" class="module-cta cta-orange">Explore MarkdownOS <span>→</span></a>
+      </div>
+
+      <!-- SupplierSync -->
+      <div class="module-card reveal reveal-delay-4">
+        <div class="module-glow mc-blue"></div>
+        <div class="module-icon mi-blue">🔗</div>
+        <div class="module-name mc-name-blue">SupplierSync</div>
+        <div class="module-tagline">// Supplier Collaboration Network</div>
+        <p class="module-desc">Replace email chains and Excel files with a structured, model-backed collaboration workspace between you and your entire supplier ecosystem.</p>
+        <ul class="module-features">
+          <li><span class="mf-dot mf-blue"></span><span>Permissioned POS data sharing with 500+ suppliers</span></li>
+          <li><span class="mf-dot mf-blue"></span><span>Collaborative forecast workbench (13-week forward view)</span></li>
+          <li><span class="mf-dot mf-blue"></span><span>Pre-promotion lift modeling with ROI estimation</span></li>
+          <li><span class="mf-dot mf-blue"></span><span>Live joint business plan (JBP) tracker with real KPIs</span></li>
+          <li><span class="mf-dot mf-blue"></span><span>Deduction management & trade claims workflow</span></li>
+        </ul>
+        <a href="#features" class="module-cta cta-blue">Explore SupplierSync <span>→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURE DEEP DIVE ─── -->
+<section id="features">
+  <div class="container">
+    <div class="section-label reveal"><span class="label">Feature Deep Dive</span></div>
+    <h2 class="display section-title reveal reveal-delay-1" style="margin-bottom:52px;">Built for the<br>Category Manager's Reality</h2>
+
+    <div class="feature-tabs reveal reveal-delay-2">
+      <button class="tab-btn active t-teal" data-tab="shelfiq">📡 ShelfIQ</button>
+      <button class="tab-btn t-orange" data-tab="markdown">🏷️ MarkdownOS</button>
+      <button class="tab-btn t-blue" data-tab="supplier">🔗 SupplierSync</button>
+    </div>
+
+    <!-- ShelfIQ Tab -->
+    <div class="tab-panel active" id="tab-shelfiq">
+      <div class="tp-feature-list">
+        <div class="tp-feature active">
+          <div class="tp-f-header"><span class="tp-f-icon">🔴</span><span class="tp-f-title">Real-Time OOS Detection</span></div>
+          <p class="tp-f-desc">POS velocity models detect out-of-stock events within 30–60 minutes of occurrence. No cameras required. Alerts route directly to store manager and category manager simultaneously, with severity scoring based on revenue impact.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">📋</span><span class="tp-f-title">Planogram Compliance Scoring</span></div>
+          <p class="tp-f-desc">Every store gets a weekly planogram compliance score by category. The system identifies which deviations are costing real revenue versus cosmetic issues, so category managers prioritize fixing what matters.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">📱</span><span class="tp-f-title">Mobile Audit App</span></div>
+          <p class="tp-f-desc">Field reps photograph shelf sections; the AI model reads SKU placement, facing counts, and price tag accuracy in seconds. Data feeds back into the compliance model without manual entry.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">🎯</span><span class="tp-f-title">Assortment Gap Analysis</span></div>
+          <p class="tp-f-desc">By clustering similar stores and analyzing market basket patterns, andromix identifies SKUs that should be stocked based on local demand but aren't — surfaced as revenue-opportunity alerts.</p>
+        </div>
+      </div>
+      <div class="tp-visual">
+        <div class="tv-header">
+          <div class="tv-dot" style="background:#ff5f57"></div>
+          <div class="tv-dot" style="background:#febc2e"></div>
+          <div class="tv-dot" style="background:#28c840"></div>
+          <span class="tv-title">andromix / ShelfIQ — Store #047 — Dairy & Beverages</span>
+        </div>
+        <div class="tv-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div>
+              <div class="label" style="color:var(--teal)">PLANOGRAM COMPLIANCE</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:var(--teal);">84<span style="font-size:20px;color:var(--text-2)">/100</span></div>
+            </div>
+            <div style="text-align:right">
+              <div class="label">ACTIVE ALERTS</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:var(--orange);">7</div>
+            </div>
+          </div>
+          <div style="position:relative">
+            <div class="shelf-visual-grid">
+              <div class="svr">
+                <div class="svs f"></div><div class="svs f2"></div><div class="svs f"></div><div class="svs f"></div><div class="svs f2"></div><div class="svs oos-v"><div class="oos-badge">OOS</div></div><div class="svs f"></div><div class="svs f"></div><div class="svs f3"></div><div class="svs f"></div>
+              </div>
+              <div class="svr">
+                <div class="svs f3"></div><div class="svs f"></div><div class="svs f"></div><div class="svs f2"></div><div class="svs f"></div><div class="svs f"></div><div class="svs oos-v"></div><div class="svs f3"></div><div class="svs f"></div><div class="svs f"></div>
+              </div>
+              <div class="svr">
+                <div class="svs f"></div><div class="svs f"></div><div class="svs f2"></div><div class="svs f"></div><div class="svs f3"></div><div class="svs f"></div><div class="svs f"></div><div class="svs f"></div><div class="svs f2"></div><div class="svs oos-v"></div>
+              </div>
+              <div class="svr">
+                <div class="svs f2"></div><div class="svs oos-v"></div><div class="svs f"></div><div class="svs f3"></div><div class="svs f"></div><div class="svs f"></div><div class="svs f2"></div><div class="svs f"></div><div class="svs f"></div><div class="svs f"></div>
+              </div>
+              <div class="svr">
+                <div class="svs f"></div><div class="svs f"></div><div class="svs f3"></div><div class="svs f2"></div><div class="svs f"></div><div class="svs oos-v"></div><div class="svs f"></div><div class="svs f3"></div><div class="svs f"></div><div class="svs f2"></div>
+              </div>
+            </div>
+            <div class="shelf-scan-line"></div>
+            <div class="shelf-label-row">
+              <div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div><div class="shelf-label-item"></div>
+            </div>
+          </div>
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px;">
+            <div style="background:rgba(255,69,32,0.1);border:1px solid rgba(255,69,32,0.25);border-radius:6px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-size:12px;font-weight:600;">⚠ Tropicana OJ 64oz — Row 1, Bay 6</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);">EMPTY 1h 12m</div>
+            </div>
+            <div style="background:rgba(255,69,32,0.08);border:1px solid rgba(255,69,32,0.15);border-radius:6px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+              <div style="font-size:12px;font-weight:600;color:var(--text-2);">⚠ Oat-Milk Barista 32oz — Row 2, Bay 7</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);">EMPTY 38m</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MarkdownOS Tab -->
+    <div class="tab-panel" id="tab-markdown">
+      <div class="tp-feature-list">
+        <div class="tp-feature active">
+          <div class="tp-f-header"><span class="tp-f-icon">⚙️</span><span class="tp-f-title">Markdown Trigger Engine</span></div>
+          <p class="tp-f-desc">The system continuously compares projected sell-through against deadlines. When a gap is detected, it fires a markdown recommendation with exact depth, stores, and expected margin impact — calculated before you decide.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">📈</span><span class="tp-f-title">Demand Forecast at SKU-Store Level</span></div>
+          <p class="tp-f-desc">LightGBM + LSTM ensemble model trained on 2+ years of POS history, incorporating weather, local events, seasonality, and price elasticity. Updated daily per store per SKU.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">🏪</span><span class="tp-f-title">Competitor Price Integration</span></div>
+          <p class="tp-f-desc">Real-time competitor pricing feeds from Profitero, Wiser, and Edge by Ascential are incorporated into demand forecasts. When a competitor moves, andromix recalculates your markdown recommendation automatically.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">🔁</span><span class="tp-f-title">Post-Markdown Attribution Loop</span></div>
+          <p class="tp-f-desc">Every markdown recommendation closes the loop by comparing predicted sell-through to actual. This feedback signal trains better recommendations over time — the model gets smarter on your specific store network.</p>
+        </div>
+      </div>
+      <div class="tp-visual">
+        <div class="tv-header">
+          <div class="tv-dot" style="background:#ff5f57"></div>
+          <div class="tv-dot" style="background:#febc2e"></div>
+          <div class="tv-dot" style="background:#28c840"></div>
+          <span class="tv-title">andromix / MarkdownOS — Markdown Queue — Week 22</span>
+        </div>
+        <div class="tv-body">
+          <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+            <div><div class="label">MARGIN AT RISK</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--orange);">$124K</div></div>
+            <div style="text-align:right"><div class="label">RECOVERABLE</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--green);">$89K</div></div>
+          </div>
+          <div class="markdown-visual">
+            <div class="mv-product">
+              <div><div class="mvp-name">Yoplait Greek 32oz Strawberry</div><div class="mvp-sub">SKU 48291 · 23 STORES · 4 DAYS TO EXPIRY</div></div>
+              <div class="mvp-old-price">$4.99</div>
+              <div class="mvp-new-price"><div class="price">$3.24</div><div class="mvp-badge">–35%</div></div>
+            </div>
+            <div class="mv-product">
+              <div><div class="mvp-name">Lay's BBQ Family Pack 16oz</div><div class="mvp-sub">SKU 77421 · 47 STORES · SLOW MOVER</div></div>
+              <div class="mvp-old-price">$5.99</div>
+              <div class="mvp-new-price"><div class="price">$4.49</div><div class="mvp-badge">–25%</div></div>
+            </div>
+            <div class="mv-product" style="opacity:0.6">
+              <div><div class="mvp-name">Häagen-Dazs Vanilla 14oz</div><div class="mvp-sub">SKU 92341 · 12 STORES · SEASONAL END</div></div>
+              <div class="mvp-old-price">$6.49</div>
+              <div class="mvp-new-price"><div class="price">$3.99</div><div class="mvp-badge">–38%</div></div>
+            </div>
+          </div>
+          <div class="mv-chart">
+            <div class="mv-chart-label">PROJECTED vs ACTUAL SELL-THROUGH (Last 7 markdowns)</div>
+            <div class="mv-bars">
+              <div class="mv-bar pred" style="height:70%"></div><div class="mv-bar act" style="height:74%"></div>
+              <div class="mv-bar pred" style="height:55%"></div><div class="mv-bar act" style="height:58%"></div>
+              <div class="mv-bar pred" style="height:85%"></div><div class="mv-bar act" style="height:88%"></div>
+              <div class="mv-bar pred" style="height:60%"></div><div class="mv-bar act" style="height:62%"></div>
+              <div class="mv-bar pred" style="height:90%"></div><div class="mv-bar act" style="height:91%"></div>
+              <div class="mv-bar pred" style="height:45%"></div><div class="mv-bar act" style="height:49%"></div>
+              <div class="mv-bar pred" style="height:78%"></div><div class="mv-bar act" style="height:80%"></div>
+            </div>
+            <div class="mv-bar-legend"><div class="mvbl-item"><div class="mvbl-dot" style="background:var(--teal)"></div>Predicted</div><div class="mvbl-item"><div class="mvbl-dot" style="background:var(--orange)"></div>Actual</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SupplierSync Tab -->
+    <div class="tab-panel" id="tab-supplier">
+      <div class="tp-feature-list">
+        <div class="tp-feature active">
+          <div class="tp-f-header"><span class="tp-f-icon">🔐</span><span class="tp-f-title">Permissioned Data Room</span></div>
+          <p class="tp-f-desc">You control exactly what each supplier sees — their own SKU performance data, at chain-level or store-level. Zero competitor data exposure. Role-based access with full audit trails for compliance.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">📊</span><span class="tp-f-title">Promotional Lift Modeling</span></div>
+          <p class="tp-f-desc">Before any promotion runs, both parties see the expected incremental lift, baseline impact, and ROI projection — trained on your actual historical promo data. No more thumb-in-the-air estimates.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">📅</span><span class="tp-f-title">Live Joint Business Plans</span></div>
+          <p class="tp-f-desc">JBPs live inside andromix as structured documents with real KPIs tracked in real time. Both sides see the same dashboard. No more annual PowerPoint reviews of stale data.</p>
+        </div>
+        <div class="tp-feature">
+          <div class="tp-f-header"><span class="tp-f-icon">🚀</span><span class="tp-f-title">New Product Launch Tracker</span></div>
+          <p class="tp-f-desc">Velocity vs. plan, store by store, from day one. When a launch underperforms, both parties are alerted simultaneously with specific causal signals — not a generic "below plan" notification.</p>
+        </div>
+      </div>
+      <div class="tp-visual">
+        <div class="tv-header">
+          <div class="tv-dot" style="background:#ff5f57"></div>
+          <div class="tv-dot" style="background:#febc2e"></div>
+          <div class="tv-dot" style="background:#28c840"></div>
+          <span class="tv-title">andromix / SupplierSync — Network Overview</span>
+        </div>
+        <div class="tv-body">
+          <div class="ss-visual">
+            <div class="ss-nodes">
+              <div class="ss-supplier ss-s1">Coca-Cola NA</div>
+              <div class="ss-supplier ss-s2">Mondelēz Intl</div>
+              <div class="ss-supplier ss-s5">Unilever</div>
+              <div class="ss-retailer">andromix<br><span style="font-size:10px;opacity:0.7">Retailer Hub</span></div>
+              <div class="ss-supplier ss-s6">Kraft Heinz</div>
+              <div class="ss-supplier ss-s3">General Mills</div>
+              <div class="ss-supplier ss-s4">Nestlé USA</div>
+              <!-- Connection lines via SVG -->
+              <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 400 220">
+                <line x1="70" y1="30" x2="200" y2="110" stroke="rgba(0,222,184,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="330" y1="30" x2="200" y2="110" stroke="rgba(0,222,184,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="10" y1="110" x2="200" y2="110" stroke="rgba(0,222,184,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="390" y1="110" x2="200" y2="110" stroke="rgba(0,222,184,0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="70" y1="190" x2="200" y2="110" stroke="rgba(0,222,184,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="330" y1="190" x2="200" y2="110" stroke="rgba(0,222,184,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+              </svg>
+            </div>
+            <div class="ss-data-row"><span class="ss-dr-label">Active Supplier Connections</span><span class="ss-dr-value">247 <span class="ss-dr-delta">↑ 14 this month</span></span></div>
+            <div class="ss-data-row"><span class="ss-dr-label">Forecast Alignment Score</span><span class="ss-dr-value">91.4% <span class="ss-dr-delta">↑ +8.2pts</span></span></div>
+            <div class="ss-data-row"><span class="ss-dr-label">Active JBPs in Platform</span><span class="ss-dr-value">34 <span class="ss-dr-delta">↑ 100% this year</span></span></div>
+            <div class="ss-data-row"><span class="ss-dr-label">Trade Deductions Resolved</span><span class="ss-dr-value">$2.1M <span class="ss-dr-delta">↑ 73% faster</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section id="how">
+  <div class="container">
+    <div class="section-label reveal"><span class="label">Getting Started</span></div>
+    <h2 class="display section-title reveal reveal-delay-1" style="margin-bottom:56px;">Live in 30 Days.<br>ROI in 60.</h2>
+    <div class="hiw-grid">
+      <div class="hiw-step reveal">
+        <div class="hiw-num">01</div>
+        <div class="hiw-icon">🔌</div>
+        <h3 class="hiw-title">Connect Your Data</h3>
+        <p class="hiw-desc">andromix connects directly to your existing POS, ERP, and planogram systems. No data migration. No manual uploads. A dedicated integrations engineer handles everything in week one.</p>
+        <div class="hiw-integrations">
+          <span class="int-tag">NCR Aloha</span>
+          <span class="int-tag">Oracle MICROS</span>
+          <span class="int-tag">SAP</span>
+          <span class="int-tag">Blue Yonder</span>
+          <span class="int-tag">EDI</span>
+        </div>
+      </div>
+      <div class="hiw-step reveal reveal-delay-2">
+        <div class="hiw-num">02</div>
+        <div class="hiw-icon">🧠</div>
+        <h3 class="hiw-title">andromix Learns Your Business</h3>
+        <p class="hiw-desc">In weeks 2–4, the models train on 2 years of your historical POS data — learning your seasonal patterns, price elasticity curves, promotional lift signatures, and store cluster dynamics.</p>
+        <div style="margin-top:16px; background:var(--bg-3); border-radius:8px; padding:14px 16px; border:1px solid var(--border)">
+          <div class="label" style="margin-bottom:8px;">Model Training Progress</div>
+          <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
+            <div style="height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));width:100%;border-radius:3px;animation:training-bar 3s ease-in-out infinite alternate"></div>
+          </div>
+          <style>@keyframes training-bar{from{width:60%}to{width:100%}}</style>
+          <div style="display:flex;justify-content:space-between;margin-top:6px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3)">2.4M SKU-STORE PAIRS</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal)">94.1% MAPE</span>
+          </div>
+        </div>
+      </div>
+      <div class="hiw-step reveal reveal-delay-4">
+        <div class="hiw-num">03</div>
+        <div class="hiw-icon">⚡</div>
+        <h3 class="hiw-title">Prescriptive Decisions, Live</h3>
+        <p class="hiw-desc">From week 5, your category managers start receiving real-time OOS alerts, markdown recommendations with margin impact pre-calculated, and supplier collaboration invitations go out.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--green)">
+            <span>✓</span><span>First OOS alert: Day 34</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--green)">
+            <span>✓</span><span>First markdown rec: Day 37</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--green)">
+            <span>✓</span><span>Supplier portal live: Day 45</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--teal)">
+            <span>→</span><span>First ROI documented: Day 60</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── METRICS ─── -->
+<section id="metrics">
+  <div class="container">
+    <div class="metrics-intro">
+      <div class="section-label reveal" style="justify-content:center"><span class="label">Proven Results</span></div>
+      <h2 class="display section-title reveal reveal-delay-1">Numbers That Move<br>The Needle</h2>
+      <p class="section-sub reveal reveal-delay-2">Measured across active andromix deployments, verified against customer baseline data.</p>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card reveal">
+        <div class="metric-val teal"><span class="counter" data-target="40" data-suffix="%">0%</span></div>
+        <div class="metric-label">OOS Rate Reduction</div>
+        <div class="metric-desc">Average improvement from baseline across all active ShelfIQ deployments</div>
+      </div>
+      <div class="metric-card reveal reveal-delay-1">
+        <div class="metric-val orange">$<span class="counter" data-target="847" data-suffix="K">0</span></div>
+        <div class="metric-label">Average Margin Recovered</div>
+        <div class="metric-desc">Per retailer per year through markdown optimization vs. previous approach</div>
+      </div>
+      <div class="metric-card reveal reveal-delay-2">
+        <div class="metric-val yellow"><span class="counter" data-target="94" data-suffix="%">0%</span></div>
+        <div class="metric-label">Sell-Through Improvement</div>
+        <div class="metric-desc">For SKUs managed through MarkdownOS recommendations vs. category manager rule-sets</div>
+      </div>
+      <div class="metric-card reveal reveal-delay-3">
+        <div class="metric-val blue"><span class="counter" data-target="125" data-suffix="%">0%</span></div>
+        <div class="metric-label">Net Revenue Retention</div>
+        <div class="metric-desc">Customers consistently expand from 1 module to all 3 within 18 months</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── INTEGRATIONS ─── -->
+<section id="integrations">
+  <div class="container">
+    <div class="int-header">
+      <div>
+        <div class="section-label reveal"><span class="label">Integrations</span></div>
+        <h2 class="display section-title reveal reveal-delay-1">Plugs Into<br>Your Stack</h2>
+        <p class="section-sub reveal reveal-delay-2" style="margin-top:12px">Works with every major POS, ERP, planogram, and price intelligence system. Your team never touches the integration layer.</p>
+      </div>
+    </div>
+    <div class="int-grid">
+      <!-- POS Systems -->
+      <div class="int-item reveal"><div class="int-logo" style="background:rgba(255,69,32,0.1);color:var(--orange);">NCR</div><div class="int-name">NCR Aloha</div><div class="int-category">POS</div></div>
+      <div class="int-item reveal reveal-delay-1"><div class="int-logo" style="background:rgba(255,69,32,0.1);color:var(--orange);">ORA</div><div class="int-name">Oracle MICROS</div><div class="int-category">POS</div></div>
+      <div class="int-item reveal reveal-delay-2"><div class="int-logo" style="background:rgba(255,214,10,0.1);color:var(--yellow);">SAP</div><div class="int-name">SAP ERP</div><div class="int-category">ERP</div></div>
+      <div class="int-item reveal reveal-delay-3"><div class="int-logo" style="background:rgba(255,214,10,0.1);color:var(--yellow);">MSFT</div><div class="int-name">MS Dynamics</div><div class="int-category">ERP</div></div>
+      <div class="int-item reveal reveal-delay-4"><div class="int-logo" style="background:rgba(0,222,184,0.1);color:var(--teal);">JDA</div><div class="int-name">Blue Yonder</div><div class="int-category">PLANOGRAM</div></div>
+      <div class="int-item reveal"><div class="int-logo" style="background:rgba(0,222,184,0.1);color:var(--teal);">SPM</div><div class="int-name">Spaceman</div><div class="int-category">PLANOGRAM</div></div>
+      <div class="int-item reveal reveal-delay-1"><div class="int-logo" style="background:rgba(91,123,255,0.1);color:var(--blue-lt);">PRF</div><div class="int-name">Profitero</div><div class="int-category">PRICE INTEL</div></div>
+      <div class="int-item reveal reveal-delay-2"><div class="int-logo" style="background:rgba(91,123,255,0.1);color:var(--blue-lt);">WSR</div><div class="int-name">Wiser</div><div class="int-category">PRICE INTEL</div></div>
+      <div class="int-item reveal reveal-delay-3"><div class="int-logo" style="background:rgba(255,45,85,0.1);color:var(--red);">NIQ</div><div class="int-name">NielsenIQ</div><div class="int-category">MARKET DATA</div></div>
+      <div class="int-item reveal reveal-delay-4"><div class="int-logo" style="background:rgba(255,45,85,0.1);color:var(--red);">CIR</div><div class="int-name">Circana</div><div class="int-category">MARKET DATA</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING ─── -->
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-header">
+      <div class="section-label reveal" style="justify-content:center"><span class="label">Pricing</span></div>
+      <h2 class="display section-title reveal reveal-delay-1">Transparent.<br>ROI-Aligned.</h2>
+      <p class="section-sub reveal reveal-delay-2">Designed for mid-market retailers. Every tier includes a 60-day paid pilot option with guaranteed ROI documentation before full commitment.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Launch -->
+      <div class="price-card reveal">
+        <div class="pc-tier">TIER 01</div>
+        <div class="pc-name">Launch</div>
+        <div class="pc-price"><span class="sym">$</span>80K–150K</div>
+        <div class="pc-period">per year</div>
+        <div class="pc-stores data">50–100 stores · 1 module</div>
+        <div class="pc-divider"></div>
+        <ul class="pc-features">
+          <li><span class="check">✓</span>ShelfIQ or MarkdownOS (1 module)</li>
+          <li><span class="check">✓</span>Up to 100 stores</li>
+          <li><span class="check">✓</span>Core POS integration (1 system)</li>
+          <li><span class="check">✓</span>Email + Slack alerts</li>
+          <li><span class="check">✓</span>Pooled CSM support</li>
+          <li><span class="check">✓</span>Standard onboarding (90 days)</li>
+          <li style="opacity:0.4"><span>✗</span>SupplierSync network access</li>
+          <li style="opacity:0.4"><span>✗</span>Dedicated success manager</li>
+        </ul>
+        <a href="#cta" class="pc-cta pc-cta-ghost">Get Started</a>
+      </div>
+      <!-- Growth — Featured -->
+      <div class="price-card featured reveal reveal-delay-2">
+        <div class="featured-badge">MOST POPULAR</div>
+        <div class="pc-tier">TIER 02</div>
+        <div class="pc-name" style="color:var(--orange)">Growth</div>
+        <div class="pc-price" style="color:var(--orange)"><span class="sym">$</span>150K–350K</div>
+        <div class="pc-period">per year</div>
+        <div class="pc-stores data">100–250 stores · 2 modules</div>
+        <div class="pc-divider"></div>
+        <ul class="pc-features">
+          <li><span class="check">✓</span>ShelfIQ + MarkdownOS (2 modules)</li>
+          <li><span class="check">✓</span>Up to 250 stores</li>
+          <li><span class="check">✓</span>Full POS + ERP integration</li>
+          <li><span class="check">✓</span>Real-time alerts + mobile app</li>
+          <li><span class="check">✓</span>Dedicated CSM</li>
+          <li><span class="check">✓</span>SupplierSync (up to 50 suppliers)</li>
+          <li><span class="check">✓</span>Quarterly business reviews</li>
+          <li><span class="check">✓</span>60-day success guarantee</li>
+        </ul>
+        <a href="#cta" class="pc-cta pc-cta-primary">Request Pilot →</a>
+      </div>
+      <!-- Scale -->
+      <div class="price-card reveal reveal-delay-4">
+        <div class="pc-tier">TIER 03</div>
+        <div class="pc-name">Scale</div>
+        <div class="pc-price"><span class="sym">$</span>350K–600K</div>
+        <div class="pc-period">per year</div>
+        <div class="pc-stores data">250–500 stores · All modules</div>
+        <div class="pc-divider"></div>
+        <ul class="pc-features">
+          <li><span class="check">✓</span>All 3 modules (full platform)</li>
+          <li><span class="check">✓</span>Up to 500 stores</li>
+          <li><span class="check">✓</span>All integrations + custom connectors</li>
+          <li><span class="check">✓</span>Full supplier network (unlimited)</li>
+          <li><span class="check">✓</span>Dedicated CSM + Solutions Consultant</li>
+          <li><span class="check">✓</span>Custom model training</li>
+          <li><span class="check">✓</span>Executive sponsor program</li>
+          <li><span class="check">✓</span>SLA with guaranteed uptime</li>
+        </ul>
+        <a href="#cta" class="pc-cta pc-cta-ghost">Talk to Sales</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px" class="reveal">
+      <p style="font-size:14px;color:var(--text-3);font-family:'IBM Plex Mono',monospace;">Alternative: <strong style="color:var(--teal)">Success Fee Model</strong> available — pay 8–12% of validated margin improvement only. Zero upfront risk.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOUNDER ─── -->
+<section id="founder">
+  <div class="container">
+    <div class="founder-grid">
+      <div class="founder-avatar-wrap reveal">
+        <div class="founder-avatar">VS</div>
+        <div class="founder-tag">FOUNDER & CEO</div>
+      </div>
+      <div class="founder-info">
+        <div class="section-label reveal"><span class="label">The Team Behind andromix</span></div>
+        <div class="display founder-name reveal reveal-delay-1">Vaibhav<br>Singh</div>
+        <div class="founder-role reveal reveal-delay-2">// Founder & CEO, andromix</div>
+        <p class="founder-bio reveal reveal-delay-3">Vaibhav spent years inside retail and CPG operations watching the same three failures repeat — shelves nobody knew were wrong, markdowns that arrived days too late, and supplier meetings where both sides were looking at different spreadsheets. andromix was built to close all three gaps in one platform, designed from day one for retailers who need precision without a team of fifty data scientists.</p>
+        <div class="founder-stats reveal reveal-delay-4">
+          <div>
+            <div class="f-stat-val">8+</div>
+            <div class="f-stat-label">Years in Retail & CPG</div>
+          </div>
+          <div>
+            <div class="f-stat-val">$2B+</div>
+            <div class="f-stat-label">Retail GMV Analyzed</div>
+          </div>
+          <div>
+            <div class="f-stat-val">40+</div>
+            <div class="f-stat-label">Retailer Partnerships</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section id="cta" style="position:relative">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <div class="cta-eyebrow">
+      <div class="section-label reveal" style="justify-content:center"><span class="label">Get Started</span></div>
+    </div>
+    <h2 class="display cta-title reveal reveal-delay-1">See What's Really<br>On Your Shelf</h2>
+    <p class="cta-sub reveal reveal-delay-2">We'll run your last 12 months of POS data through andromix and hand you a shelf opportunity report — free, in 30 days, with every margin leak quantified.</p>
+    <div class="cta-actions reveal reveal-delay-3">
+      <a href="mailto:hello@andromix.ai" class="btn btn-primary" style="font-size:16px;padding:16px 36px;">Get Your Free Shelf Audit →</a>
+      <a href="#pricing" class="btn btn-outline" style="font-size:16px;padding:16px 28px;">View Pricing</a>
+    </div>
+    <div class="cta-note reveal reveal-delay-4">No commitment required · Connects to your existing POS in 48 hours · Full ROI report in 30 days</div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="logo-mark" style="width:28px;height:28px">
+            <div class="logo-bar" style="height:2px"></div>
+            <div class="logo-bar" style="height:2px"></div>
+            <div class="logo-bar" style="height:2px"></div>
+          </div>
+          <span class="logo-text" style="font-size:18px">andro<span>mix</span></span>
+        </div>
+        <p class="footer-tagline">AI intelligence layer for Retail & CPG. Shelf precision. Margin protection. Supplier alignment.</p>
+        <div class="footer-status">
+          <div class="footer-status-dot"></div>
+          ALL SYSTEMS OPERATIONAL
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">PLATFORM</div>
+        <ul class="footer-links">
+          <li><a href="#platform">ShelfIQ</a></li>
+          <li><a href="#platform">MarkdownOS</a></li>
+          <li><a href="#platform">SupplierSync</a></li>
+          <li><a href="#integrations">Integrations</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">SOLUTIONS</div>
+        <ul class="footer-links">
+          <li><a href="#">Grocery Chains</a></li>
+          <li><a href="#">Specialty Food</a></li>
+          <li><a href="#">Drug & Pharmacy</a></li>
+          <li><a href="#">CPG Brands</a></li>
+          <li><a href="#">Private Label</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">COMPANY</div>
+        <ul class="footer-links">
+          <li><a href="#founder">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="mailto:hello@andromix.ai">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 andromix, Inc. All rights reserved. Built for the shelf.</div>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Security</a>
+        <a href="#">SOC 2</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── JAVASCRIPT ─── -->
+<script>
+  /* ── Navbar scroll ── */
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  /* ── Build shelf grid background ── */
+  const grid = document.getElementById('shelfGridBg');
+  const ROWS = 7, COLS = 28;
+  const oosSlots = new Set();
+  while (oosSlots.size < 14) oosSlots.add(Math.floor(Math.random() * ROWS * COLS));
+  for (let r = 0; r < ROWS; r++) {
+    const row = document.createElement('div');
+    row.className = 'shelf-row';
+    for (let c = 0; c < COLS; c++) {
+      const slot = document.createElement('div');
+      const idx = r * COLS + c;
+      const rand = Math.random();
+      slot.className = 'shelf-slot' + (
+        oosSlots.has(idx) ? ' oos' :
+        rand < 0.55 ? ' filled' :
+        rand < 0.7 ? ' teal-slot' :
+        rand < 0.8 ? ' yellow-slot' : ''
+      );
+      slot.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+      row.appendChild(slot);
+    }
+    grid.appendChild(row);
+  }
+
+  /* ── Intersection Observer for reveal ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── Counter animation ── */
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const isDecimal = target % 1 !== 0;
+    const duration = 1800;
+    const start = performance.now();
+    const prefix = el.closest('.metric-val')?.textContent.startsWith('$') ? '' : '';
+    function step(ts) {
+      const progress = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = isDecimal ? (eased * target).toFixed(1) : Math.round(eased * target);
+      el.textContent = val + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+  /* ── Feature tabs ── */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    });
+  });
+
+  /* ── Feature sub-tabs ── */
+  document.querySelectorAll('.tp-feature').forEach(feat => {
+    feat.addEventListener('click', () => {
+      const panel = feat.closest('.tab-panel');
+      panel.querySelectorAll('.tp-feature').forEach(f => f.classList.remove('active'));
+      feat.classList.add('active');
+    });
+  });
+
+  /* ── Smooth hero entry ── */
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        setTimeout(() => el.classList.add('visible'), i * 80);
+      }
+    });
+  });
+
+  /* ── Random OOS slot updates ── */
+  setInterval(() => {
+    const slots = document.querySelectorAll('#shelfGridBg .shelf-slot');
+    const idx = Math.floor(Math.random() * slots.length);
+    const s = slots[idx];
+    if (!s.classList.contains('oos')) {
+      s.classList.add('oos');
+      setTimeout(() => s.classList.remove('oos'), 4000 + Math.random() * 3000);
+    }
+  }, 2500);
+</script>
+</body>
+</html>
